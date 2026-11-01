@@ -1,0 +1,10 @@
+{
+  "name": "veltrix-bike-shop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VELTRIX — Монгол хэл дээрх унадаг дугуй, сэлбэгийн онлайн дэлгүүр",
+  "main": "server.js",
+  "scripts": {"start": "node server.js", "dev": "node --watch server.js"},
+  "engines": {"node": ">=20"},
+  "dependencies": {"express": "^5.1.0"}
+}

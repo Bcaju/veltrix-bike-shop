@@ -1,0 +1,10 @@
+[
+ {"id":"bike-01","name":"Trail 27.5 MTB","category":"Дугуй","price":890000,"oldPrice":990000,"stock":4,"tag":"ЭРЭЛТТЭЙ","emoji":"🚵","description":"Хот болон бартаат замд тохиромжтой уулын дугуй."},
+ {"id":"bike-02","name":"Urban 26 City Bike","category":"Дугуй","price":620000,"oldPrice":0,"stock":3,"tag":"ШИНЭ","emoji":"🚲","description":"Өдөр тутмын хэрэглээнд эвтэйхэн, хөнгөн загвар."},
+ {"id":"fork-01","name":"Zoom Vaxa 32 Air Fork","category":"Сэрээ","price":200000,"oldPrice":230000,"stock":5,"tag":"СОНГОЛТ","emoji":"⚙️","description":"Агаарын амортизатортой урд сэрээ."},
+ {"id":"fork-02","name":"MTB Suspension Fork","category":"Сэрээ","price":145000,"oldPrice":0,"stock":6,"tag":"","emoji":"🔩","description":"Өдөр тутмын MTB хэрэглээнд зориулсан сэрээ."},
+ {"id":"brake-01","name":"Shimano MT200 Brake Set","category":"Тоормос","price":165000,"oldPrice":185000,"stock":8,"tag":"ХЯМДРАЛ","emoji":"🛠️","description":"Гидравлик дискэн тоормосны иж бүрдэл."},
+ {"id":"pad-01","name":"MTB Brake Pads","category":"Сэлбэг","price":18000,"oldPrice":0,"stock":20,"tag":"","emoji":"🧩","description":"Дискэн тоормосны наклад."},
+ {"id":"grip-01","name":"Lock-on Handlebar Grip","category":"Сэлбэг","price":25000,"oldPrice":0,"stock":15,"tag":"","emoji":"✋","description":"Гулсалт багатай, түгжээтэй бариул."},
+ {"id":"oil-01","name":"Mineral Brake Oil 100ml","category":"Арчилгаа","price":22000,"oldPrice":0,"stock":12,"tag":"","emoji":"🧴","description":"Гидравлик тоормосны минерал тос."}
+]
