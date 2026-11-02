@@ -1,7 +1,99 @@
-<!doctype html><html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VELTRIX Admin</title><link rel="stylesheet" href="/style.css"></head><body class="admin-body"><header class="top"><a class="brand" href="/">VELTRIX<span>ADMIN CONTROL</span></a><a href="/" class="btn">Дэлгүүр рүү ↗</a></header><main class="admin-wrap"><section id="login" class="login panel"><p class="eyebrow">SECURE ACCESS</p><h1>АДМИН НЭВТРЭХ</h1><input id="password" type="password" placeholder="Админы нууц үг"><button id="loginBtn" class="btn red wide">НЭВТРЭХ</button><p id="loginMsg"></p></section>
-<section id="dashboard" class="hidden"><div class="section-head"><div><p class="eyebrow">MANAGEMENT</p><h1>УДИРДЛАГЫН САМБАР</h1></div><button id="logout" class="btn">Гарах</button></div><div id="stats" class="stats"></div>
-<div class="tabs"><button data-tab="products" class="active">Бараа</button><button data-tab="orders">Захиалга</button><button data-tab="coupons">Купон</button></div>
-<section id="tab-products" class="panel"><div class="section-head"><h2>БАРААНЫ УДИРДЛАГА</h2><button id="newProduct" class="btn red">+ Бараа нэмэх</button></div><form id="productForm" class="form-grid hidden"><input type="hidden" id="pid"><input id="pname" placeholder="Барааны нэр" required><input id="pcat" placeholder="Ангилал"><input id="pprice" type="number" placeholder="Үнэ ₮" required><input id="pold" type="number" placeholder="Хуучин үнэ ₮"><input id="pstock" type="number" placeholder="Үлдэгдэл" required><input id="pimage" placeholder="Зургийн URL"><textarea id="pdesc" placeholder="Тайлбар"></textarea><label><input id="pfeatured" type="checkbox"> Онцлох бараа</label><div><button class="btn red" type="submit">ХАДГАЛАХ</button> <button class="btn" type="button" id="cancelForm">Болих</button></div></form><div id="productTable"></div></section>
-<section id="tab-orders" class="panel hidden"><div class="section-head"><h2>ЗАХИАЛГУУД</h2><button class="btn" id="refreshOrders">Шинэчлэх</button></div><div id="orderTable"></div></section>
-<section id="tab-coupons" class="panel hidden"><h2>ХЯМДРАЛЫН КУПОН</h2><form id="couponForm" class="form-grid"><input id="couponCode" placeholder="Код (жишээ: RIDE10)" required><input id="couponPercent" type="number" min="1" max="90" placeholder="Хямдрал %" required><button class="btn red">КУПОН ҮҮСГЭХ</button></form><div id="couponTable"></div></section>
-<p id="adminMsg"></p></section></main><script src="/admin.js"></script></body></html>
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VELTRIX Admin</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body class="admin-body">
+<header class="top">
+<a class="brand" href="/">VELTRIX<span>ADMIN CONTROL</span></a>
+<a href="/" class="btn">Дэлгүүр рүү ↗</a>
+</header>
+
+<main class="admin-wrap">
+<section id="login" class="login panel">
+<p class="eyebrow">SECURE ACCESS</p>
+<h1>АДМИН НЭВТРЭХ</h1>
+<input id="password" type="password" placeholder="Админы нууц үг">
+<button id="loginBtn" class="btn red wide">НЭВТРЭХ</button>
+<p id="loginMsg"></p>
+</section>
+
+<section id="dashboard" class="hidden">
+<div class="section-head">
+<div><p class="eyebrow">MANAGEMENT</p><h1>УДИРДЛАГЫН САМБАР</h1></div>
+<button id="logout" class="btn">Гарах</button>
+</div>
+
+<div id="stats" class="stats"></div>
+
+<div class="tabs">
+<button data-tab="products" class="active">Бараа</button>
+<button data-tab="orders">Захиалга</button>
+<button data-tab="coupons">Купон</button>
+</div>
+
+<section id="tab-products" class="panel">
+<div class="section-head">
+<h2>БАРААНЫ УДИРДЛАГА</h2>
+<button id="newProduct" class="btn red">+ Бараа нэмэх</button>
+</div>
+
+<form id="productForm" class="form-grid hidden">
+<input type="hidden" id="pid">
+<input id="pname" placeholder="Барааны нэр" required>
+<input id="pcat" placeholder="Ангилал">
+<input id="pprice" type="number" placeholder="Үнэ ₮" required>
+<input id="pold" type="number" placeholder="Хуучин үнэ ₮">
+<input id="pstock" type="number" placeholder="Үлдэгдэл" required>
+
+<input id="pimage" placeholder="Зургийн URL">
+
+<div style="grid-column:1/-1">
+<label for="pimageFile">Барааны зураг сонгох</label>
+<input id="pimageFile" type="file" accept="image/png,image/jpeg,image/webp">
+<p id="uploadMsg">Зураг сонгоогүй байна.</p>
+<img id="imagePreview" alt="Зургийн урьдчилсан харагдац"
+style="display:none;max-width:220px;max-height:180px;object-fit:contain;border-radius:8px;margin-top:10px">
+</div>
+
+<textarea id="pdesc" placeholder="Тайлбар"></textarea>
+
+<label><input id="pfeatured" type="checkbox"> Онцлох бараа</label>
+
+<div>
+<button class="btn red" type="submit">ХАДГАЛАХ</button>
+<button class="btn" type="button" id="cancelForm">Болих</button>
+</div>
+</form>
+
+<div id="productTable"></div>
+</section>
+
+<section id="tab-orders" class="panel hidden">
+<div class="section-head">
+<h2>ЗАХИАЛГУУД</h2>
+<button class="btn" id="refreshOrders">Шинэчлэх</button>
+</div>
+<div id="orderTable"></div>
+</section>
+
+<section id="tab-coupons" class="panel hidden">
+<h2>ХЯМДРАЛЫН КУПОН</h2>
+<form id="couponForm" class="form-grid">
+<input id="couponCode" placeholder="Код (жишээ: RIDE10)" required>
+<input id="couponPercent" type="number" min="1" max="90" placeholder="Хямдрал %" required>
+<button class="btn red">КУПОН ҮҮСГЭХ</button>
+</form>
+<div id="couponTable"></div>
+</section>
+
+<p id="adminMsg"></p>
+</section>
+</main>
+
+<script src="/admin.js"></script>
+</body>
+</html>
