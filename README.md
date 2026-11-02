@@ -1,26 +1,34 @@
-# VELTRIX BIKE SHOP — Монгол онлайн дугуйн дэлгүүр
+# VELTRIX Admin Upgrade (v2)
 
-Responsive storefront + Express API + JSON order storage + password-protected admin order panel.
+## Included
+- Mongolian storefront with product search and cart
+- Order checkout, delivery fee, coupon discount
+- Admin login (JWT token expires after 12 hours)
+- Product create/edit/archive, stock and featured flag
+- Order status and payment status management
+- Sales overview and low-stock count
+- Coupon create/delete
+- MongoDB Atlas persistence
+- Optional Cloudinary configuration fields and signed upload support
 
-## Run locally
-1. Install Node.js 20 or newer.
-2. In this folder run `npm install`.
-3. Set `ADMIN_PASSWORD` environment variable (or create `.env` and use a dotenv loader if you add it).
-4. Run `npm start`.
-5. Open `http://localhost:3000` and admin at `http://localhost:3000/admin.html`.
+## Important setup
+This version requires MongoDB Atlas. Create a database and set `MONGODB_URI` in Render.
+Set `ADMIN_PASSWORD` and a long random `JWT_SECRET` in Render Environment.
+Cloudinary is optional; without it, paste an image URL into the product form.
+Do not paste passwords or API keys into chat or commit `.env` files.
 
-For a quick local start on Linux/macOS:
-`ADMIN_PASSWORD='your-long-password' npm start`
+## Deploy
+1. Replace the contents of your project with these files (keep a backup of the old folder).
+2. Push the updated files to GitHub `main`; Render auto-deploys.
+3. In Render > your service > Environment, set:
+   - `MONGODB_URI`
+   - `ADMIN_PASSWORD`
+   - `JWT_SECRET` (generate a long random value)
+   - Cloudinary values only if using Cloudinary.
+4. Open `https://veltrix-bike-shop.onrender.com/admin`.
 
-## Deploy on Render
-- Create a new Web Service from this folder/repository.
-- Build command: `npm install`
-- Start command: `npm start`
-- Add environment variable `ADMIN_PASSWORD` with a long private value.
-- Important: JSON files on a free Render instance may reset on redeploy/restart. For real production orders, attach a persistent disk or move orders/products to MongoDB/PostgreSQL before taking live customer orders.
-
-## Before public launch
-- Replace demo product names/prices/stock in `data/products.json`.
-- Add real product images and a real contact channel.
-- Configure a persistent database/storage for orders.
-- Confirm delivery, payment, refund and privacy terms.
+## Notes
+- Payment is recorded manually; this does not charge bank cards or integrate QPay/MonPay.
+- Coupon discount is applied to the order total before delivery fee.
+- Product delete archives the item instead of permanently deleting it.
+- This is a starter production upgrade. Test checkout and admin flows before accepting real customer orders.
