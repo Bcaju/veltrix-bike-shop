@@ -2487,3 +2487,8 @@ body {
   margin-top: -10px;
   border-bottom: 1px solid #ffffff18;
 }
+
+/* VELTRIX FORCE STATIC MAIN HEADER */
+.vx-header {
+  position: static !important;
+}
