@@ -1,99 +1,220 @@
 <!doctype html>
 <html lang="mn">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VELTRIX Admin</title>
-<link rel="stylesheet" href="/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VELTRIX Admin Control</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="admin-body">
-<header class="top">
-<a class="brand" href="/">VELTRIX<span>ADMIN CONTROL</span></a>
-<a href="/" class="btn">Дэлгүүр рүү ↗</a>
-</header>
 
-<main class="admin-wrap">
-<section id="login" class="login panel">
-<p class="eyebrow">SECURE ACCESS</p>
-<h1>АДМИН НЭВТРЭХ</h1>
-<input id="password" type="password" placeholder="Админы нууц үг">
-<button id="loginBtn" class="btn red wide">НЭВТРЭХ</button>
-<p id="loginMsg"></p>
-</section>
+  <header class="top">
+    <a class="brand" href="/">VELTRIX<span>ADMIN CONTROL</span></a>
+    <a href="/" class="btn">Дэлгүүр рүү ↗</a>
+  </header>
 
-<section id="dashboard" class="hidden">
-<div class="section-head">
-<div><p class="eyebrow">MANAGEMENT</p><h1>УДИРДЛАГЫН САМБАР</h1></div>
-<button id="logout" class="btn">Гарах</button>
-</div>
+  <main class="admin-wrap">
 
-<div id="stats" class="stats"></div>
+    <section id="login" class="login panel">
+      <p class="eyebrow">SECURE ACCESS</p>
+      <h1>АДМИН НЭВТРЭХ</h1>
+      <input id="password" type="password" placeholder="Админы нууц үг">
+      <button id="loginBtn" class="btn red wide">НЭВТРЭХ</button>
+      <p id="loginMsg"></p>
+    </section>
 
-<div class="tabs">
-<button data-tab="products" class="active">Бараа</button>
-<button data-tab="orders">Захиалга</button>
-<button data-tab="coupons">Купон</button>
-</div>
+    <section id="dashboard" class="hidden">
 
-<section id="tab-products" class="panel">
-<div class="section-head">
-<h2>БАРААНЫ УДИРДЛАГА</h2>
-<button id="newProduct" class="btn red">+ Бараа нэмэх</button>
-</div>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">VELTRIX MANAGEMENT</p>
+          <h1>УДИРДЛАГЫН САМБАР</h1>
+        </div>
+        <button id="logout" class="btn">Гарах</button>
+      </div>
 
-<form id="productForm" class="form-grid hidden">
-<input type="hidden" id="pid">
-<input id="pname" placeholder="Барааны нэр" required>
-<input id="pcat" placeholder="Ангилал">
-<input id="pprice" type="number" placeholder="Үнэ ₮" required>
-<input id="pold" type="number" placeholder="Хуучин үнэ ₮">
-<input id="pstock" type="number" placeholder="Үлдэгдэл" required>
+      <div id="stats" class="stats"></div>
 
-<input id="pimage" placeholder="Зургийн URL">
+      <nav class="tabs">
+        <button data-tab="products" class="active">Бараа</button>
+        <button data-tab="orders">Захиалга</button>
+        <button data-tab="coupons">Купон</button>
+        <button data-tab="reviews">Үнэлгээ</button>
+        <button data-tab="chats">Чат</button>
+      </nav>
 
-<div style="grid-column:1/-1">
-<label for="pimageFile">Барааны зураг сонгох</label>
-<input id="pimageFile" type="file" accept="image/png,image/jpeg,image/webp">
-<p id="uploadMsg">Зураг сонгоогүй байна.</p>
-<img id="imagePreview" alt="Зургийн урьдчилсан харагдац"
-style="display:none;max-width:220px;max-height:180px;object-fit:contain;border-radius:8px;margin-top:10px">
-</div>
+      <!-- PRODUCTS -->
+      <section id="tab-products" class="panel">
 
-<textarea id="pdesc" placeholder="Тайлбар"></textarea>
+        <div class="section-head">
+          <h2>БАРААНЫ УДИРДЛАГА</h2>
+          <button id="newProduct" class="btn red">+ Бараа нэмэх</button>
+        </div>
 
-<label><input id="pfeatured" type="checkbox"> Онцлох бараа</label>
+        <form id="productForm" class="form-grid hidden">
+          <input type="hidden" id="pid">
+          <input id="pname" placeholder="Барааны нэр" required>
+          <input id="pcat" placeholder="Ангилал">
+          <input id="pprice" type="number" min="0" placeholder="Үнэ ₮" required>
+          <input id="pold" type="number" min="0" placeholder="Хуучин үнэ ₮">
+          <input id="pstock" type="number" min="0" placeholder="Үлдэгдэл" required>
+          <input id="pimage" placeholder="Зургийн URL">
 
-<div>
-<button class="btn red" type="submit">ХАДГАЛАХ</button>
-<button class="btn" type="button" id="cancelForm">Болих</button>
-</div>
-</form>
+          <div style="grid-column:1/-1">
+            <label for="pimageFile">Барааны зураг сонгох</label>
+            <input id="pimageFile" type="file" accept="image/png,image/jpeg,image/webp">
+            <p id="uploadMsg">Зураг сонгоогүй байна.</p>
+            <img id="imagePreview" alt="Зургийн урьдчилсан харагдац"
+              style="display:none;max-width:220px;max-height:180px;object-fit:contain;border-radius:8px;margin-top:10px">
+          </div>
 
-<div id="productTable"></div>
-</section>
+          <textarea id="pdesc" placeholder="Тайлбар"></textarea>
+          <div class="compatibility-fields" style="grid-column:1/-1">
+            <h3>БҮТЭЭГДЭХҮҮНИЙ ТОХИРОХ ҮЗҮҮЛЭЛТ</h3>
 
-<section id="tab-orders" class="panel hidden">
-<div class="section-head">
-<h2>ЗАХИАЛГУУД</h2>
-<button class="btn" id="refreshOrders">Шинэчлэх</button>
-</div>
-<div id="orderTable"></div>
-</section>
+            <input id="pwheelSizes" placeholder="Дугуйн хэмжээ: 26, 27.5, 29">
 
-<section id="tab-coupons" class="panel hidden">
-<h2>ХЯМДРАЛЫН КУПОН</h2>
-<form id="couponForm" class="form-grid">
-<input id="couponCode" placeholder="Код (жишээ: RIDE10)" required>
-<input id="couponPercent" type="number" min="1" max="90" placeholder="Хямдрал %" required>
-<button class="btn red">КУПОН ҮҮСГЭХ</button>
-</form>
-<div id="couponTable"></div>
-</section>
+            <input id="pbrakeTypes" placeholder="Тоормос: Hydraulic, Mechanical">
 
-<p id="adminMsg"></p>
-</section>
-</main>
+            <input id="pspeeds" placeholder="Арааны тоо: 7, 8, 9, 10">
 
-<script src="/admin.js"></script>
+            <input id="pbikeTypes" placeholder="Дугуйн төрөл: MTB, BMX, Road">
+          </div>
+
+          <label>
+            <input id="pfeatured" type="checkbox"> Онцлох бараа
+          </label>
+
+          <div>
+            <button class="btn red" type="submit">ХАДГАЛАХ</button>
+            <button class="btn" type="button" id="cancelForm">Болих</button>
+          </div>
+        </form>
+
+        <div id="productTable"></div>
+
+        <section class="inventory-panel">
+          <div class="section-head">
+            <h3>АГУУЛАХЫН ХӨДӨЛГӨӨН</h3>
+          </div>
+
+          <form id="inventoryForm" class="inventory-form">
+            <select id="inventoryProduct" required>
+              <option value="">Бараа сонгох</option>
+            </select>
+
+            <select id="inventoryType" required>
+              <option value="Орлого">Орлого нэмэх (+)</option>
+              <option value="Зарлага">Зарлага хасах (-)</option>
+            </select>
+
+            <input id="inventoryQuantity" type="number"
+              min="1" max="100000" step="1"
+              placeholder="Тоо ширхэг" required>
+
+            <input id="inventoryNote" maxlength="300"
+              placeholder="Тайлбар / шалтгаан">
+
+            <button class="btn red" type="submit">БҮРТГЭХ</button>
+          </form>
+
+          <div id="inventoryMessage" class="inventory-message"></div>
+
+          <h3>СҮҮЛИЙН АГУУЛАХЫН ТҮҮХ</h3>
+          <div id="inventoryHistory">Ачаалж байна...</div>
+        </section>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="tab-orders" class="panel hidden">
+        <div class="section-head">
+          <h2>ЗАХИАЛГУУД</h2>
+          <button class="btn" id="refreshOrders">Шинэчлэх</button>
+        </div>
+        <div class="order-tools">
+          <input id="orderSearch" type="search" placeholder="Код, нэр, утасны дугаараар хайх...">
+          <select id="orderStatusFilter">
+            <option value="">Бүх төлөв</option>
+            <option>Шинэ</option>
+            <option>Баталгаажсан</option>
+            <option>Хүргэлтэд гарсан</option>
+            <option>Хүргэгдсэн</option>
+            <option>Цуцалсан</option>
+          </select>
+        </div>
+        <div id="orderTable"></div>
+        <div id="orderDetails" class="order-details hidden"></div>
+      </section>
+
+      <!-- COUPONS -->
+      <section id="tab-coupons" class="panel hidden">
+        <h2>ХЯМДРАЛЫН КУПОН</h2>
+
+        <form id="couponForm" class="form-grid">
+          <input id="couponCode" placeholder="Код (RIDE10)" required>
+          <input id="couponPercent" type="number" min="1" max="90" placeholder="Хямдрал %" required>
+          <div style="grid-column:1/-1">
+            <label for="couponExpires" style="display:block;margin-bottom:4px;font-size:12px;color:var(--muted)">Дуусах огноо (заавал биш):</label>
+            <input id="couponExpires" type="date">
+          </div>
+          <button class="btn red">КУПОН ҮҮСГЭХ</button>
+        </form>
+
+        <div id="couponTable"></div>
+      </section>
+
+      <!-- REVIEWS -->
+      <section id="tab-reviews" class="panel hidden">
+        <div class="section-head">
+          <div>
+            <h2>ХЭРЭГЛЭГЧИЙН ҮНЭЛГЭЭ</h2>
+            <p class="eyebrow">REVIEW MODERATION</p>
+          </div>
+          <button id="refreshReviews" class="btn">Шинэчлэх</button>
+        </div>
+        <div id="reviewTable"></div>
+      </section>
+
+      <!-- CHATS -->
+      <section id="tab-chats" class="panel hidden">
+        <div class="section-head">
+          <div>
+            <h2>ХЭРЭГЛЭГЧИЙН ЧАТ</h2>
+            <p class="eyebrow">CUSTOMER SUPPORT</p>
+          </div>
+          <button id="refreshChats" class="btn">Шинэчлэх</button>
+        </div>
+
+        <div class="admin-chat-layout">
+          <div id="chatList" class="admin-chat-list">
+            <p>Чат ачаалж байна...</p>
+          </div>
+
+          <div class="admin-chat-window">
+            <div id="chatTitle" class="admin-chat-title">
+              Захиалга сонгоно уу
+            </div>
+
+            <div id="chatMessages" class="admin-chat-messages">
+              <p>Зүүн талаас захиалгаа сонгоно уу.</p>
+            </div>
+
+            <form id="chatForm" class="admin-chat-form">
+              <input id="chatInput" placeholder="Мессеж бичих..." maxlength="2000" disabled>
+              <button id="chatSend" class="btn red" disabled>Илгээх</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <p id="adminMsg"></p>
+
+    </section>
+  </main>
+
+  <script src="/admin.js"></script>
 </body>
+
 </html>

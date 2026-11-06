@@ -1,8 +1,342 @@
-<!doctype html><html lang="mn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VELTRIX — MTB & Bike Store</title><link rel="stylesheet" href="/style.css"></head><body>
-<header class="top"><a class="brand" href="/">VELTRIX<span>BIKE STORE</span></a><nav><a href="#products">Бараа</a><a href="#about">Бидний тухай</a></nav><button id="cartOpen" class="btn">Сагс <b id="cartCount">0</b></button></header>
-<section class="hero"><div><p class="eyebrow">RIDE BEYOND LIMITS</p><h1>ДУГУЙНХАА<br><em>ХҮЧИЙГ</em> МЭДЭР.</h1><p>MTB, downhill болон өдөр тутмын унаанд хэрэгтэй сэлбэг, хэрэгсэл.</p><a class="btn red" href="#products">БАРАА ҮЗЭХ ↓</a></div><div class="hero-mark">VX<span>27.5</span></div></section>
-<main id="products"><div class="section-head"><div><p class="eyebrow">VELTRIX COLLECTION</p><h2>ОНЦЛОХ БАРАА</h2></div><input id="search" placeholder="Бараа хайх..."></div><div id="productsGrid" class="products"><p>Бараа ачаалж байна...</p></div></main>
-<section id="about" class="about"><h2>RIDE HARD. STAY VELTRIX.</h2><p>Унадаг дугуйн сэлбэг, хэрэгслийн онлайн дэлгүүр.</p><p>Улаанбаатар болон орон нутагт захиалга авна.</p></section>
-<footer>© 2026 VELTRIX BIKE STORE</footer>
-<div id="cart" class="drawer hidden"><div class="drawer-box"><div class="section-head"><h2>Таны сагс</h2><button id="cartClose" class="btn">Хаах ✕</button></div><div id="cartItems"></div><div id="checkout"><h3>Захиалгын мэдээлэл</h3><input id="customer" placeholder="Таны нэр"><input id="phone" placeholder="Утасны дугаар"><input id="address" placeholder="Хаяг / сум, дүүрэг"><input id="coupon" placeholder="Купоны код (байвал)"><select id="payment"><option>Хүлээн авахдаа төлөх</option><option>Шилжүүлгээр төлөх (гараар баталгаажуулна)</option></select><textarea id="note" placeholder="Нэмэлт тайлбар"></textarea><button id="orderBtn" class="btn red wide">ЗАХИАЛГА ӨГӨХ</button><p id="orderMsg"></p></div></div></div>
-<script src="/shop.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="mn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a0c">
+  <title>VELTRIX — Ride Beyond Limits</title>
+  <link rel="icon" href="/logo.svg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/home.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="vx-header">
+    <a class="vx-logo" href="/">
+      <img src="/logo.svg" alt="VELTRIX Logo">
+      <span class="vx-logo-text">
+        VELTRIX
+        <small>BIKE PERFORMANCE</small>
+      </span>
+    </a>
+
+    <div class="vx-header-right">
+      <button id="cartOpen" class="vx-cart" aria-label="Сагс нээх">
+        <span>САГС</span>
+        <b id="cartCount">0</b>
+      </button>
+
+      <button id="authOpen" class="vx-auth-button" type="button">
+        НЭВТРЭХ
+      </button>
+    </div>
+
+    <nav class="vx-nav" id="mainNav">
+      <a href="#home" class="vx-nav-item">НҮҮР</a>
+      <a href="#products" class="vx-nav-item">БАРАА</a>
+      <a href="#about" class="vx-nav-item">БИДНИЙ ТУХАЙ</a>
+      <a href="#track" id="trackOpenBtn" class="vx-track-link vx-nav-item">ЗАХИАЛГА ШАЛГАХ</a>
+    </nav>
+  </header>
+
+  <section class="vx-hero" id="home">
+    <div class="vx-grid"></div>
+    <div class="vx-glow"></div>
+
+    <div class="vx-hero-content">
+      <div class="vx-kicker"><span></span> BUILT FOR THE RIDE</div>
+
+      <h1>
+        RIDE<br>
+        BEYOND<br>
+        <em>LIMITS.</em>
+      </h1>
+
+      <p>
+        Зүгээр нэг дугуй биш.<br>
+        Энэ бол чиний дараагийн түвшин.
+      </p>
+
+      <div class="vx-actions">
+        <a href="#products" class="vx-primary">БАРАА ҮЗЭХ <span>↗</span></a>
+        <a href="#about" class="vx-secondary">БИДНИЙ ТУХАЙ</a>
+      </div>
+
+      <div class="vx-hero-stats">
+        <div><strong>MTB</strong><small>PERFORMANCE</small></div>
+        <div><strong>27.5"</strong><small>RIDE STYLE</small></div>
+        <div><strong>100%</strong><small>RIDE PASSION</small></div>
+      </div>
+    </div>
+
+    <div class="vx-hero-art" aria-hidden="true">
+      <img class="vx-bike-photo" src="/images/veltrix-downhill.jpg" alt="VELTRIX downhill mountain bike">
+      <div class="vx-orbit orbit-one"></div>
+      <div class="vx-orbit orbit-two"></div>
+      <div class="vx-big-x">X</div>
+      <div class="vx-vertical">VELOCITY · CONTROL · FREEDOM</div>
+      <div class="vx-speed">NO<br>LIMITS<span>///</span></div>
+    </div>
+
+    <div class="vx-scroll">SCROLL TO EXPLORE <span>↓</span></div>
+    <div class="vx-hero-number">01 / 04</div>
+  </section>
+
+  <div class="vx-marquee">
+    <div>
+      RIDE HARD <span>✳</span> PUSH YOUR LIMITS <span>✳</span>
+      BUILT FOR MTB <span>✳</span> RIDE HARD <span>✳</span>
+      PUSH YOUR LIMITS <span>✳</span> BUILT FOR MTB <span>✳</span>
+    </div>
+  </div>
+
+  <section class="vx-benefits">
+    <div><span>01</span><b>ЧАНАРТАЙ СЭЛБЭГ</b><small>Унаанд бэлэн тоноглол</small></div>
+    <div><span>02</span><b>ХУРДАН ЗАХИАЛГА</b><small>Хялбар онлайн захиалга</small></div>
+    <div><span>03</span><b>УЛС ДАЯАР</b><small>УБ болон орон нутаг</small></div>
+    <div><span>04</span><b>RIDE SUPPORT</b><small>Бидэнтэй холбогдоорой</small></div>
+  </section>
+
+  <main id="products" class="vx-products-section">
+    <div class="vx-section-top">
+      <div>
+        <div class="vx-kicker"><span></span> THE VELTRIX SELECTION</div>
+        <h2>GEAR UP.<br><em>RIDE OUT.</em></h2>
+      </div>
+      <div class="vx-section-right">
+        <p>Дараагийн аялал, дараагийн үсрэлтэд<br>хэрэгтэй тоноглолуудаа сонго.</p>
+        <div class="vx-search-wrap">
+          <span>⌕</span>
+          <input id="search" placeholder="Бараа хайх..." autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+
+    <!-- VELTRIX COMPATIBILITY FINDER -->
+    <section class="vx-fit-finder">
+      <div class="vx-fit-heading">
+        <span>VELTRIX SMART FINDER</span>
+        <h3>ДУГУЙНХАА ТОХИРОХ <em>СЭЛБЭГИЙГ ОЛ</em></h3>
+        <p>Дугуйнхаа үзүүлэлтийг сонгоод тохирох барааг хайгаарай.</p>
+      </div>
+
+      <form id="vxCompatibilityForm" class="vx-fit-form">
+        <label>
+          Дугуйн хэмжээ
+          <select id="vxWheelSize">
+            <option value="">Сонгох</option>
+            <option value="26">26 инч</option>
+            <option value="27.5">27.5 инч</option>
+            <option value="29">29 инч</option>
+          </select>
+        </label>
+
+        <label>
+          Тоормос
+          <select id="vxBrakeType">
+            <option value="">Сонгох</option>
+            <option value="Hydraulic">Гидравлик</option>
+            <option value="Mechanical">Механик</option>
+          </select>
+        </label>
+
+        <label>
+          Арааны тоо
+          <select id="vxSpeed">
+            <option value="">Сонгох</option>
+            <option value="7">7 араа</option>
+            <option value="8">8 араа</option>
+            <option value="9">9 араа</option>
+            <option value="10">10 араа</option>
+          </select>
+        </label>
+
+        <label>
+          Дугуйн төрөл
+          <select id="vxBikeType">
+            <option value="">Сонгох</option>
+            <option value="MTB">MTB</option>
+            <option value="BMX">BMX</option>
+            <option value="Road">Road</option>
+          </select>
+        </label>
+
+        <div class="vx-fit-actions">
+          <button type="submit">ТОХИРОХ БАРАА ХАЙХ ↗</button>
+          <button type="button" id="vxFitReset">ЦЭВЭРЛЭХ</button>
+        </div>
+        <p id="vxFitMessage" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <div class="vx-products-label">
+      <span>FEATURED PRODUCTS</span>
+      <span>VELTRIX / SHOP</span>
+    </div>
+
+    <div id="productsGrid" class="products">
+      <p>Бараа ачаалж байна...</p>
+    </div>
+  </main>
+
+  <section class="vx-banner">
+    <div class="vx-banner-bg"></div>
+    <div class="vx-banner-content">
+      <div class="vx-kicker"><span></span> YOUR RIDE. YOUR RULES.</div>
+      <h2>DON'T FOLLOW.<br><em>LEAD THE RIDE.</em></h2>
+      <p>Өөрийн хязгаарыг өөрөө тогтоо.</p>
+      <a href="#products" class="vx-primary">ОДОО СОНГОХ ↗</a>
+    </div>
+    <div class="vx-banner-mark">VX<span>///</span></div>
+  </section>
+
+  <section id="about" class="vx-about">
+    <div class="vx-about-mark">V</div>
+    <div class="vx-about-content">
+      <div class="vx-kicker"><span></span> ABOUT VELTRIX</div>
+      <h2>MADE FOR<br><em>THE RIDE.</em></h2>
+      <p>VELTRIX бол дугуй сонирхогчдод зориулсан сэлбэг, хэрэгслийн онлайн дэлгүүр. MTB, downhill болон өдөр тутмын
+        унаандаа хэрэгтэй зүйлээ нэг дороос сонгоорой.</p>
+      <p>Улаанбаатар болон орон нутагт захиалга авна.</p>
+    </div>
+  </section>
+
+  <footer class="vx-footer">
+    <a class="vx-logo" href="/">VELTRIX<span>BIKE PERFORMANCE</span></a>
+    <p>RIDE BEYOND LIMITS.</p>
+    <small>© 2026 VELTRIX BIKE STORE. ALL RIGHTS RESERVED.</small>
+  </footer>
+
+  <!-- CART: Existing shop.js functionality preserved -->
+  <div id="cart" class="drawer hidden">
+    <div class="drawer-box">
+      <div class="section-head">
+        <h2>ТАНЫ САГС</h2>
+        <button id="cartClose" class="btn">ХААХ ✕</button>
+      </div>
+      <div id="cartItems"></div>
+
+      <div id="cartSummary" class="cart-summary">
+        <div class="cart-summary-row">
+          <span>Барааны үнэ:</span>
+          <b id="cartSubtotal">0₮</b>
+        </div>
+        <div class="cart-summary-row">
+          <span>Хүргэлтийн төлбөр:</span>
+          <b id="cartDelivery">8,000₮</b>
+        </div>
+        <div class="cart-summary-row total-row">
+          <span>Нийт төлөх дүн:</span>
+          <b id="cartTotal">8,000₮</b>
+        </div>
+        <p id="freeDeliveryNotice" class="cart-delivery-tip">
+          150,000₮-с дээш үнийн дүнтэй захиалгад хүргэлт <strong>ҮНЭГҮЙ</strong>!
+        </p>
+      </div>
+
+      <div id="checkout">
+        <h3>ЗАХИАЛГЫН МЭДЭЭЛЭЛ</h3>
+        <input id="customer" placeholder="Таны нэр">
+        <input id="phone" placeholder="Утасны дугаар">
+        <input id="address" placeholder="Хаяг / сум, дүүрэг">
+        <input id="coupon" placeholder="Купоны код (байвал)">
+        <select id="payment">
+          <option>Хүлээн авахдаа төлөх</option>
+          <option>Шилжүүлгээр төлөх (гараар баталгаажуулна)</option>
+        </select>
+        <textarea id="note" placeholder="Нэмэлт тайлбар"></textarea>
+        <button id="orderBtn" class="btn red wide">ЗАХИАЛГА ӨГӨХ ↗</button>
+        <p id="orderMsg"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER TRACKING & CUSTOMER CHAT MODAL -->
+  <div id="trackModal" class="product-modal">
+    <div class="track-modal-box">
+      <button class="modal-close" id="trackClose">✕</button>
+
+      <div class="track-head">
+        <span class="vx-purple-tag">LIVE STATUS &amp; SUPPORT</span>
+        <h2>ЗАХИАЛГА ШАЛГАХ</h2>
+        <p>Захиалгын код болон утасны дугаараа оруулан төлөвөө шалгаж, дэлгүүртэй шууд чатлана уу.</p>
+      </div>
+
+      <form id="trackForm" class="track-search-form">
+        <div class="track-input-group">
+          <input id="trackCodeInput" placeholder="Захиалгын код (Жнь: VX1234ABCD)" required autocomplete="off">
+          <input id="trackPhoneInput" placeholder="Утасны дугаар (Жнь: 99112233)" required autocomplete="off">
+        </div>
+        <button id="trackSubmitBtn" type="submit" class="btn purple wide">ШАЛГАХ ↗</button>
+      </form>
+
+      <div id="trackLoading" class="track-loading hidden">
+        <p>Захиалгын мэдээлэл шалгаж байна...</p>
+      </div>
+
+      <div id="trackError" class="track-error hidden"></div>
+
+      <div id="trackResult" class="track-result-content hidden">
+        <div class="order-summary-card">
+          <div class="order-summary-header">
+            <div>
+              <span class="order-code-label">ЗАХИАЛГЫН КОД</span>
+              <h3 id="trackResultCode" class="order-code-title">-</h3>
+            </div>
+            <div id="trackStatusBadge" class="track-status-badge">Шинэ</div>
+          </div>
+
+          <div class="order-info-grid">
+            <div><span>Огноо:</span> <b id="trackResultDate">-</b></div>
+            <div><span>Нийт дүн:</span> <b id="trackResultTotal" class="purple-text">-</b></div>
+          </div>
+
+          <div class="order-items-box">
+            <h4>ЗАХИАЛСАН БАРАА:</h4>
+            <div id="trackResultItems" class="track-items-list"></div>
+          </div>
+        </div>
+
+        <!-- CUSTOMER CHAT SECTION -->
+        <div class="customer-chat-card">
+          <div class="chat-header">
+            <h4>ДЭЛГҮҮРИЙН ТУСЛАХТАЙ ЧАТЛАХ</h4>
+            <small>VELTRIX Support</small>
+          </div>
+
+          <div id="customerChatMessages" class="customer-chat-messages">
+            <p class="empty-chat">Мессеж байхгүй байна.</p>
+          </div>
+
+          <form id="customerChatForm" class="customer-chat-form">
+            <input id="customerChatInput" placeholder="Мессеж бичих..." maxlength="2000" required autocomplete="off">
+            <button type="submit" class="btn purple" id="customerChatSend">ИЛГЭЭХ</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- VELTRIX CUSTOMER AUTH -->
+  <div id="authModal" class="product-modal">
+    <div class="auth-modal-content">
+      <button id="authClose" class="modal-close" type="button">✕</button>
+      <div id="authContent"></div>
+    </div>
+  </div>
+
+  <script src="/shop.js"></script>
+
+</body>
+
+</html>

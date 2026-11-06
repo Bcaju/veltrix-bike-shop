@@ -1,7 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 130" role="img" aria-labelledby="title">
-<title id="title">VELTRIX Bike Shop</title>
-<path d="M18 98 92 18l42 45 31-32 68 67h-47l-22-25-30 25h-42L92 76 70 98Z" fill="#f20d2f"/>
-<path d="m92 18 42 45 31-32 68 67h-47l-22-25-30 25h-42L92 76 70 98" fill="none" stroke="#ff405b" stroke-width="5" stroke-linejoin="round"/>
-<text x="250" y="77" fill="#f5f6f8" font-family="Arial,sans-serif" font-size="66" font-style="italic" font-weight="900" letter-spacing="-3">VELTRIX</text>
-<text x="255" y="111" fill="#c4c8d0" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="12">BIKE SHOP</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff5360"/>
+      <stop offset="1" stop-color="#d60020"/>
+    </linearGradient>
+  </defs>
+  <path d="M35 35 H105 L150 174 L195 35 H265 L174 265 H126 Z" fill="url(#red)"/>
+  <path d="M150 174 L174 265 L205 174 Z" fill="#850014"/>
+  <path d="M35 35 H105 L150 174 L126 265 Z" fill="#ff263b"/>
 </svg>

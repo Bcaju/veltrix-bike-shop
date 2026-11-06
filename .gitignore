@@ -1,3 +1,8 @@
 node_modules/
 .env
 .DS_Store
+
+# Local backups
+backup-*/
+*.backup
+*.before-*
