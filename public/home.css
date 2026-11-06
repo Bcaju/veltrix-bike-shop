@@ -2476,3 +2476,14 @@ body {
     min-width: 90px;
   }
 }
+
+/* VELTRIX STICKY CART HEADER */
+.drawer .section-head {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #111718;
+  padding: 10px 0 14px;
+  margin-top: -10px;
+  border-bottom: 1px solid #ffffff18;
+}
