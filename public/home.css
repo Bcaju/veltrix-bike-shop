@@ -22,7 +22,7 @@ body {
 }
 
 .vx-header {
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 100;
   min-height: 76px;
