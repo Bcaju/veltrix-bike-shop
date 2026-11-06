@@ -2360,3 +2360,119 @@ body {
     width: 100%;
   }
 }
+
+/* VELTRIX MOBILE HEADER FIX */
+@media (max-width: 600px) {
+  .vx-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo actions"
+      "nav nav";
+    align-items: center;
+    gap: 12px 8px;
+    min-height: auto;
+    padding: 12px 4%;
+  }
+
+  .vx-logo {
+    grid-area: logo;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 25px;
+  }
+
+  .vx-logo img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+  }
+
+  .vx-logo span {
+    margin-top: 0;
+  }
+
+  .vx-logo small {
+    font-size: 8px;
+    letter-spacing: 2px;
+  }
+
+  .vx-header-right {
+    grid-area: actions;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .vx-cart {
+    padding: 9px 8px;
+    gap: 5px;
+    font-size: 10px;
+  }
+
+  .vx-auth-button {
+    padding: 10px 8px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .vx-nav {
+    grid-area: nav;
+    display: flex;
+    width: 100%;
+    flex-basis: auto;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding-top: 7px;
+    border-top: 1px solid #ffffff18;
+  }
+
+  .vx-nav a {
+    flex: 0 0 auto;
+    font-size: clamp(8px, 2.35vw, 10px);
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .vx-nav .vx-track-link {
+    padding: 7px 5px;
+    font-size: clamp(7px, 2.1vw, 9px);
+  }
+}
+
+/* VELTRIX CART DRAWER LAYER FIX */
+.drawer {
+  z-index: 300 !important;
+}
+
+@media (max-width: 600px) {
+  .drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 300 !important;
+  }
+
+  .drawer-box {
+    width: 100%;
+    max-width: 520px;
+    padding: 20px 16px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  }
+
+  .drawer .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .drawer #cartClose {
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+}
