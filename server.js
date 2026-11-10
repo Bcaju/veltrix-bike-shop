@@ -77,8 +77,14 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.static("public", {
-  maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
-  etag: true
+  etag: true,
+  setHeaders(res, filePath) {
+    if (filePath.endsWith("sw.js") || filePath.endsWith("index.html")) {
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    } else {
+      res.setHeader("Cache-Control", "public, max-age=86400, must-revalidate");
+    }
+  }
 }));
 
 /* =========================

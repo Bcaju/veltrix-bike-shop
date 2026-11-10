@@ -13,8 +13,8 @@
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <title>VELTRIX — Ride Beyond Limits</title>
   <link rel="icon" href="/logo.svg">
-  <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/home.css">
+  <link rel="stylesheet" href="/style.css?v=20261110-3">
+  <link rel="stylesheet" href="/home.css?v=20261110-3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap"
@@ -415,7 +415,13 @@
 
   <!-- VELTRIX FIRST VISIT PUSH PROMPT -->
   <div id="vxPushPrompt" class="vx-push-prompt">
-    <div class="vx-push-prompt-card" role="dialog" aria-modal="true" aria-labelledby="vxPushPromptTitle">
+    <button id="vxPushPromptLauncher" class="vx-push-launcher"
+      type="button" aria-label="Мэдэгдлийн тохиргоо нээх" aria-expanded="false">
+      <span class="vx-push-launcher-icon">♢</span>
+      <span>МЭДЭГДЭЛ</span>
+    </button>
+
+    <div class="vx-push-prompt-card" role="dialog" aria-modal="false" aria-labelledby="vxPushPromptTitle">
       <button id="vxPushPromptClose" class="vx-push-prompt-close" type="button" aria-label="Хаах">×</button>
       <div class="vx-push-prompt-mark">V</div>
       <span class="vx-push-prompt-tag">VELTRIX NOTIFICATIONS</span>
@@ -427,7 +433,7 @@
     </div>
   </div>
 
-  <script src="/shop.js"></script>
+  <script src="/shop.js?v=20261110-3"></script>
 
 </body>
 

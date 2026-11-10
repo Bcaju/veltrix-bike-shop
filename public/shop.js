@@ -1,3 +1,23 @@
+
+/* =================================
+   VELTRIX SERVICE WORKER UPDATE
+================================= */
+async function vxRegisterServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    throw new Error("Service Worker дэмжигдэхгүй байна.");
+  }
+
+  const registration = await navigator.serviceWorker.register(
+    "/sw.js?v=20261110-2",
+    { updateViaCache: "none" }
+  );
+
+  await registration.update();
+  await navigator.serviceWorker.ready;
+
+  return registration;
+}
+
 let products = [];
 let vxFitResults = null;
 let cart = JSON.parse(localStorage.getItem("veltrix-cart") || "[]");
@@ -961,7 +981,7 @@ async function vxSyncPushSubscription(token) {
     if (pending) {
       subscriptionData = JSON.parse(pending);
     } else {
-      const registration = await navigator.serviceWorker.register("/sw.js");
+      const registration = await vxRegisterServiceWorker();
       await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
       if (subscription) subscriptionData = subscription.toJSON();
@@ -1031,7 +1051,7 @@ async function vxEnablePushNotifications() {
       return;
     }
 
-    const registration = await navigator.serviceWorker.register("/sw.js");
+    const registration = await vxRegisterServiceWorker();
     await navigator.serviceWorker.ready;
 
     const keyResponse = await fetch("/api/push/public-key");
@@ -1084,6 +1104,7 @@ function vxShowPushPrompt() {
 
   if (Notification.permission === "denied") {
     localStorage.setItem("vx-push-prompt-choice", "declined");
+    document.querySelector("#vxPushPrompt")?.classList.remove("active", "expanded");
     return;
   }
 
@@ -1097,7 +1118,7 @@ function vxShowPushPrompt() {
     } else {
       void (async () => {
         try {
-          const registration = await navigator.serviceWorker.register("/sw.js");
+          const registration = await vxRegisterServiceWorker();
           await navigator.serviceWorker.ready;
           const subscription = await registration.pushManager.getSubscription();
 
@@ -1113,11 +1134,11 @@ function vxShowPushPrompt() {
       })();
     }
 
+    document.querySelector("#vxPushPrompt")?.classList.add("active");
     return;
   }
 
-  if (localStorage.getItem("vx-push-prompt-choice")) return;
-
+  // Permission default үед хонхыг харуулна.
   document.querySelector("#vxPushPrompt")?.classList.add("active");
 }
 
@@ -1160,16 +1181,6 @@ function vxRenderAuth() {
         </details>
       </div>
 
-      <div class="vx-notifications">
-        <div class="vx-notifications-heading">
-          <h3>МЭДЭГДЭЛ</h3>
-          <span id="vxUnreadCount">0 УНШААГҮЙ</span>
-        </div>
-        <div id="vxNotifications" class="vx-notifications-list">
-          <p class="vx-orders-loading">Мэдэгдэл ачаалж байна...</p>
-        </div>
-      </div>
-
       <div class="vx-my-orders">
         <div class="vx-my-orders-heading">
           <h3>МИНИЙ ЗАХИАЛГУУД</h3>
@@ -1182,7 +1193,6 @@ function vxRenderAuth() {
 
       <button id="vxLogout" class="auth-submit" type="button">СИСТЕМЭЭС ГАРАХ</button>
     `;
-    vxLoadNotifications();
     vxLoadMyOrders();
     return;
   }
@@ -1638,17 +1648,26 @@ vxPushPromptAllow?.addEventListener("click", () => {
   void vxEnablePushNotifications();
 });
 
-function vxDismissPushPrompt() {
-  localStorage.setItem("vx-push-prompt-choice", "declined");
-  vxPushPrompt?.classList.remove("active");
+const vxPushPromptLauncher = document.querySelector("#vxPushPromptLauncher");
+
+function vxCollapsePushPrompt() {
+  vxPushPrompt?.classList.remove("expanded");
+  vxPushPromptLauncher?.setAttribute("aria-expanded", "false");
 }
 
-vxPushPromptDecline?.addEventListener("click", vxDismissPushPrompt);
-vxPushPromptClose?.addEventListener("click", vxDismissPushPrompt);
+function vxExpandPushPrompt() {
+  vxPushPrompt?.classList.add("expanded");
+  vxPushPromptLauncher?.setAttribute("aria-expanded", "true");
+}
 
-vxPushPrompt?.addEventListener("click", event => {
-  if (event.target === vxPushPrompt) vxDismissPushPrompt();
-});
+function vxDismissPushPrompt() {
+  localStorage.setItem("vx-push-prompt-choice", "declined");
+  vxPushPrompt?.classList.remove("active", "expanded");
+}
+
+vxPushPromptLauncher?.addEventListener("click", vxExpandPushPrompt);
+vxPushPromptDecline?.addEventListener("click", vxDismissPushPrompt);
+vxPushPromptClose?.addEventListener("click", vxCollapsePushPrompt);
 
 vxShowPushPrompt();
 
