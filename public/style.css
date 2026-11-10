@@ -696,3 +696,61 @@ td select {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* ORDER STATUS HISTORY */
+.order-history {
+  margin: 22px 0;
+  padding: 18px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 14px;
+}
+
+.order-history-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.order-history-item {
+  position: relative;
+  display: flex;
+  gap: 13px;
+  padding: 0 0 20px;
+}
+
+.order-history-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 13px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border, #ddd);
+}
+
+.order-history-dot {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  z-index: 1;
+}
+
+.order-history-item div {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.order-history-item small {
+  color: var(--muted, #888);
+}
+
+.order-history-item p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted, #888);
+}

@@ -6,3 +6,6 @@ node_modules/
 backup-*/
 *.backup
 *.before-*
+
+# Backup files
+*.backup-*

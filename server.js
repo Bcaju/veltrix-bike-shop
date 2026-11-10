@@ -10,8 +10,19 @@ const path = require("path");
 const { v2: cloudinary } = require("cloudinary");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const webpush = require("web-push");
 
 const app = express();
+
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY || "";
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || "";
+const vapidSubject = process.env.VAPID_SUBJECT || "https://veltrix-bike-shop.onrender.com";
+
+const pushReady = Boolean(vapidPublicKey && vapidPrivateKey);
+
+if (pushReady) {
+  webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
+}
 
 // Trust proxy for reverse proxies (Render, Cloudflare, etc.)
 app.set("trust proxy", 1);
@@ -224,12 +235,88 @@ const Order = mongoose.model("Order", new mongoose.Schema({
   deliveryFee: { type: Number, default: 0 },
 
   status: { type: String, default: "Шинэ" },
+  statusHistory: [{
+    status: { type: String, required: true },
+    changedAt: { type: Date, default: Date.now },
+    note: { type: String, default: "" }
+  }],
   paymentMethod: { type: String, default: "Хүлээн авахдаа төлөх" },
   paymentStatus: { type: String, default: "Төлөөгүй" },
 
   pointsAwarded: { type: Boolean, default: false },
   stockRestored: { type: Boolean, default: false }
 }, { timestamps: true }));
+
+const Notification = mongoose.model("Notification", new mongoose.Schema({
+  userId: { type: String, required: true, index: true },
+  orderId: { type: String, default: "" },
+  orderCode: { type: String, default: "" },
+  type: {
+    type: String,
+    enum: ["order_created", "order_status"],
+    required: true
+  },
+  title: { type: String, required: true, maxlength: 120 },
+  message: { type: String, required: true, maxlength: 300 },
+  read: { type: Boolean, default: false, index: true }
+}, { timestamps: true }));
+
+Notification.schema.index({ userId: 1, createdAt: -1 });
+
+const PushSubscription = mongoose.model("PushSubscription", new mongoose.Schema({
+  userId: { type: String, required: true, index: true },
+  endpoint: { type: String, required: true, unique: true },
+  keys: {
+    p256dh: { type: String, required: true },
+    auth: { type: String, required: true }
+  },
+  userAgent: { type: String, default: "", maxlength: 300 }
+}, { timestamps: true }));
+
+PushSubscription.schema.index({ userId: 1, createdAt: -1 });
+
+async function createUserNotification(data) {
+  if (!data || !data.userId) return;
+
+  try {
+    await Notification.create(data);
+  } catch (error) {
+    console.error("Notification create error:", error.message);
+  }
+}
+
+async function sendPushToUser(userId, notification) {
+  if (!pushReady || !userId) return;
+
+  try {
+    const subscriptions = await PushSubscription.find({
+      userId: String(userId)
+    }).lean();
+
+    const payload = JSON.stringify({
+      title: notification.title || "VELTRIX",
+      body: notification.body || "",
+      url: notification.url || "/"
+    });
+
+    await Promise.allSettled(subscriptions.map(async subscription => {
+      try {
+        await webpush.sendNotification({
+          endpoint: subscription.endpoint,
+          keys: subscription.keys
+        }, payload);
+      } catch (error) {
+        if (error.statusCode === 404 || error.statusCode === 410) {
+          await PushSubscription.deleteOne({ _id: subscription._id });
+        } else {
+          console.error("Push delivery error:", error.statusCode || error.message);
+        }
+      }
+    }));
+  } catch (error) {
+    console.error("Push send error:", error.message);
+  }
+}
 
 const Coupon = mongoose.model("Coupon", new mongoose.Schema({
   code: { type: String, unique: true, uppercase: true, trim: true },
@@ -837,11 +924,26 @@ app.post("/api/orders", userOnly, orderLimiter, async (req, res) => {
         discount,
         total,
         deliveryFee,
+        status: "Шинэ",
+        statusHistory: [{
+          status: "Шинэ",
+          changedAt: new Date(),
+          note: "Захиалга хүлээн авсан"
+        }],
         paymentMethod: "Хүлээн авахдаа төлөх",
         paymentStatus: "Төлөөгүй"
       });
 
       await recordOrderStockMovements(createdOrder, "Зарлага", "placed");
+
+      await createUserNotification({
+        userId: String(createdOrder.userId),
+        orderId: String(createdOrder._id),
+        orderCode: createdOrder.code,
+        type: "order_created",
+        title: "Шинэ захиалга бүртгэгдлээ",
+        message: `Таны ${createdOrder.code} захиалгыг хүлээн авлаа.`
+      });
 
       res.status(201).json({
         ok: true,
@@ -890,7 +992,7 @@ app.get("/api/my/orders", userOnly, async (req, res) => {
     const orders = await Order.find({
       userId: String(req.userId)
     })
-      .select("code items total subtotal discount deliveryFee status paymentMethod paymentStatus createdAt updatedAt")
+      .select("code phone items total subtotal discount deliveryFee status paymentMethod paymentStatus createdAt updatedAt")
       .sort({ createdAt: -1 })
       .limit(50)
       .lean();
@@ -903,8 +1005,161 @@ app.get("/api/my/orders", userOnly, async (req, res) => {
 });
 
 /* =========================
+   CUSTOMER NOTIFICATIONS
+========================= */
+
+app.get("/api/my/notifications", userOnly, async (req, res) => {
+  try {
+    const userId = String(req.userId);
+
+    const [notifications, unreadCount] = await Promise.all([
+      Notification.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(50)
+        .lean(),
+      Notification.countDocuments({ userId, read: false })
+    ]);
+
+    res.json({ notifications, unreadCount });
+  } catch (error) {
+    console.error("My notifications error:", error.message);
+    res.status(500).json({ error: "Мэдэгдэл ачаалж чадсангүй" });
+  }
+});
+
+app.patch("/api/my/notifications/:id/read", userOnly, async (req, res) => {
+  try {
+    const notification = await Notification.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        userId: String(req.userId)
+      },
+      { $set: { read: true } },
+      { new: true }
+    ).lean();
+
+    if (!notification) {
+      return res.status(404).json({ error: "Мэдэгдэл олдсонгүй" });
+    }
+
+    res.json({ ok: true, notification });
+  } catch (error) {
+    console.error("Mark notification read error:", error.message);
+    res.status(500).json({ error: "Мэдэгдэл шинэчилж чадсангүй" });
+  }
+});
+
+app.get("/api/push/public-key", (req, res) => {
+  if (!pushReady) {
+    return res.status(503).json({ error: "Push тохиргоо бэлэн биш байна" });
+  }
+
+  res.json({ publicKey: vapidPublicKey });
+});
+
+app.post("/api/my/push-subscriptions", userOnly, async (req, res) => {
+  try {
+    const subscription = req.body || {};
+    const endpoint = String(subscription.endpoint || "");
+    const p256dh = String(subscription.keys?.p256dh || "");
+    const auth = String(subscription.keys?.auth || "");
+
+    if (
+      !endpoint.startsWith("https://") ||
+      endpoint.length > 3000 ||
+      !p256dh ||
+      !auth ||
+      p256dh.length > 300 ||
+      auth.length > 300
+    ) {
+      return res.status(400).json({ error: "Төхөөрөмжийн мэдээлэл буруу байна" });
+    }
+
+    await PushSubscription.findOneAndUpdate(
+      { endpoint },
+      {
+        $set: {
+          userId: String(req.userId),
+          endpoint,
+          keys: { p256dh, auth },
+          userAgent: String(req.headers["user-agent"] || "").slice(0, 300)
+        }
+      },
+      { upsert: true, new: true, runValidators: true }
+    );
+
+    res.status(201).json({ ok: true });
+  } catch (error) {
+    console.error("Push subscription save error:", error.message);
+    res.status(500).json({ error: "Төхөөрөмж бүртгэж чадсангүй" });
+  }
+});
+
+app.delete("/api/my/push-subscriptions", userOnly, async (req, res) => {
+  try {
+    const endpoint = String(req.body?.endpoint || "");
+    if (!endpoint) {
+      return res.status(400).json({ error: "Төхөөрөмжийн endpoint шаардлагатай" });
+    }
+
+    await PushSubscription.deleteOne({
+      userId: String(req.userId),
+      endpoint
+    });
+
+    res.json({ ok: true });
+  } catch (error) {
+    console.error("Push subscription delete error:", error.message);
+    res.status(500).json({ error: "Төхөөрөмж устгаж чадсангүй" });
+  }
+});
+
+
+/* =========================
    ORDER TRACKING
 ========================= */
+
+// Нэвтэрсэн хэрэглэгч өөрийн захиалгыг кодоор шалгах
+app.get("/api/my/orders/:code/track", userOnly, async (req, res) => {
+  try {
+    const code = String(req.params.code || "").trim().toUpperCase();
+
+    if (!code) {
+      return res.status(400).json({ error: "Захиалгын код оруулна уу" });
+    }
+
+    const order = await Order.findOne({
+      code,
+      userId: String(req.userId)
+    }).lean();
+
+    if (!order) {
+      return res.status(404).json({ error: "Захиалга олдсонгүй" });
+    }
+
+    const statusHistory =
+      Array.isArray(order.statusHistory) && order.statusHistory.length
+        ? order.statusHistory
+        : [{
+            status: order.status || "Шинэ",
+            changedAt: order.updatedAt || order.createdAt,
+            note: "Одоогийн төлөв"
+          }];
+
+    res.json({
+      code: order.code,
+      status: order.status,
+      statusHistory,
+      items: order.items,
+      total: order.total,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt
+    });
+  } catch (error) {
+    console.error("My order tracking error:", error.message);
+    res.status(500).json({ error: "Захиалга шалгахад алдаа гарлаа" });
+  }
+});
 
 // Захиалгын код + утсаар шалгана
 app.get("/api/orders/track", async (req, res) => {
@@ -929,9 +1184,19 @@ app.get("/api/orders/track", async (req, res) => {
       });
     }
 
+    const statusHistory =
+      Array.isArray(order.statusHistory) && order.statusHistory.length
+        ? order.statusHistory
+        : [{
+            status: order.status || "Шинэ",
+            changedAt: order.updatedAt || order.createdAt,
+            note: "Одоогийн төлөв"
+          }];
+
     res.json({
       code: order.code,
       status: order.status,
+      statusHistory,
       items: order.items,
       total: order.total,
       createdAt: order.createdAt,
@@ -1079,9 +1344,10 @@ app.post("/api/reviews", async (req, res) => {
 app.get("/api/orders/chat", userOnly, async (req, res) => {
   try {
     const code = String(req.query.code || "").trim().toUpperCase();
-    const phone = normalizePhone(req.query.phone);
-
-    const order = await Order.findOne({ code, phone, userId: String(req.userId) }).select("_id");
+    const order = await Order.findOne({
+      code,
+      userId: String(req.userId)
+    }).select("_id");
 
     if (!order) {
       return res.status(404).json({ error: "Захиалга олдсонгүй" });
@@ -1101,7 +1367,6 @@ app.get("/api/orders/chat", userOnly, async (req, res) => {
 app.post("/api/orders/chat", userOnly, async (req, res) => {
   try {
     const code = String(req.body.code || "").trim().toUpperCase();
-    const phone = normalizePhone(req.body.phone);
     const message = String(req.body.message || "").trim();
 
     if (!message || message.length > 2000) {
@@ -1110,7 +1375,10 @@ app.post("/api/orders/chat", userOnly, async (req, res) => {
       });
     }
 
-    const order = await Order.findOne({ code, phone, userId: String(req.userId) });
+    const order = await Order.findOne({
+      code,
+      userId: String(req.userId)
+    });
 
     if (!order) {
       return res.status(404).json({ error: "Захиалга олдсонгүй" });
@@ -1400,6 +1668,7 @@ app.patch("/api/admin/orders/:id", adminOnly, async (req, res) => {
     const allowed = [
       "Шинэ",
       "Баталгаажсан",
+      "Бэлтгэж байна",
       "Хүргэлтэд гарсан",
       "Хүргэгдсэн",
       "Цуцалсан"
@@ -1542,6 +1811,17 @@ app.patch("/api/admin/orders/:id", adminOnly, async (req, res) => {
       stockAction = { type: "reactivated", items: deductedItems };
     }
 
+    // Төлөв өөрчлөгдсөн үед түүхэнд шинэ бичлэг нэмнэ
+    if (patch.status && patch.status !== existingOrder.status) {
+      patch.$push = {
+        statusHistory: {
+          status: patch.status,
+          changedAt: new Date(),
+          note: "Админ захиалгын төлөвийг шинэчилсэн"
+        }
+      };
+    }
+
     let order;
 
     try {
@@ -1668,6 +1948,27 @@ app.patch("/api/admin/orders/:id", adminOnly, async (req, res) => {
       } finally {
         await session.endSession();
       }
+    }
+
+    if (
+      patch.status &&
+      patch.status !== existingOrder.status &&
+      order.userId
+    ) {
+      await createUserNotification({
+        userId: String(order.userId),
+        orderId: String(order._id),
+        orderCode: order.code,
+        type: "order_status",
+        title: "Захиалгын төлөв шинэчлэгдлээ",
+        message: `${order.code} захиалгын шинэ төлөв: ${order.status}`
+      });
+
+      await sendPushToUser(String(order.userId), {
+        title: "VELTRIX — Захиалгын шинэ төлөв",
+        body: `${order.code} захиалгын төлөв: ${order.status}`,
+        url: "/"
+      });
     }
 
     res.json(order);

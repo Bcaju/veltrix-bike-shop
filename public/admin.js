@@ -525,6 +525,14 @@ window.viewOrder = id => {
   const box = $("orderDetails");
   box.classList.remove("hidden");
 
+  const orderHistory = Array.isArray(o.statusHistory) && o.statusHistory.length
+    ? o.statusHistory
+    : [{
+        status: o.status || "Шинэ",
+        changedAt: o.updatedAt || o.createdAt,
+        note: "Одоогийн төлөв"
+      }];
+
   box.innerHTML = `
     <div class="section-head">
       <h3>ЗАХИАЛГЫН ДЭЛГЭРЭНГҮЙ</h3>
@@ -541,6 +549,23 @@ window.viewOrder = id => {
       <div><small>Төлбөрийн арга</small><b>${esc(o.paymentMethod || "-")}</b></div>
       <div><small>Төлбөрийн төлөв</small><b>${esc(o.paymentStatus || "-")}</b></div>
     </div>
+
+    <section class="order-history">
+      <h4>ТӨЛӨВИЙН ТҮҮХ</h4>
+      <ol class="order-history-list">
+        ${orderHistory.map(item => `
+          <li class="order-history-item">
+            <span class="order-history-dot"></span>
+            <div>
+              <b>${esc(item.status || "-")}</b>
+              <small>${dateTime(item.changedAt)}</small>
+              <p>${esc(item.note || "Төлөв шинэчлэгдсэн")}</p>
+            </div>
+          </li>
+        `).join("")}
+      </ol>
+    </section>
+
     <h4>ЗАХИАЛСАН БАРАА</h4>
     <div class="table-wrap">
       <table>

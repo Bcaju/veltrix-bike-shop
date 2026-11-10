@@ -5,6 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090a0c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="VELTRIX">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <title>VELTRIX — Ride Beyond Limits</title>
   <link rel="icon" href="/logo.svg">
   <link rel="stylesheet" href="/style.css">
@@ -40,6 +46,8 @@
     <nav class="vx-nav" id="mainNav">
       <a href="#home" class="vx-nav-item">НҮҮР</a>
       <a href="#products" class="vx-nav-item">БАРАА</a>
+      <a href="#knowledge" class="vx-nav-item">МЭДЛЭГИЙН ТӨВ</a>
+      <a href="#repair" class="vx-nav-item">ДУГУЙ ЗАСВАР</a>
       <a href="#about" class="vx-nav-item">БИДНИЙ ТУХАЙ</a>
       <a href="#track" id="trackOpenBtn" class="vx-track-link vx-nav-item">ЗАХИАЛГА ШАЛГАХ</a>
     </nav>
@@ -185,6 +193,76 @@
       <p>Бараа ачаалж байна...</p>
     </div>
   </main>
+
+
+  <!-- VELTRIX PARTS KNOWLEDGE CENTER -->
+  <section id="knowledge" class="vx-knowledge">
+    <div class="vx-knowledge-inner">
+      <div class="vx-knowledge-heading">
+        <div>
+          <div class="vx-kicker"><span></span> VELTRIX KNOWLEDGE BASE</div>
+          <h2>PARTS <em>KNOWLEDGE</em></h2>
+          <p>Дугуйн эд анги, зориулалт, эвдрэл болон засварын талаар мэдлэгээ нэмэгдүүл.</p>
+        </div>
+        <div class="vx-knowledge-count">
+          <strong id="vxKnowledgeCount">12</strong>
+          <span>ЭД АНГИ</span>
+        </div>
+      </div>
+
+      <div class="vx-knowledge-search">
+        <span>⌕</span>
+        <input id="vxKnowledgeSearch" type="search"
+          placeholder="Эд ангийн нэрээр хайх...">
+      </div>
+
+      <div id="vxKnowledgeCategories" class="vx-knowledge-categories"></div>
+
+      <div id="vxKnowledgeGrid" class="vx-knowledge-grid">
+        <p>Мэдлэгийн сан ачаалж байна...</p>
+      </div>
+
+      <div class="vx-knowledge-note">
+        <strong>⚠ АЮУЛГҮЙ АЖИЛЛАГАА</strong>
+        <p>Тоормос, сэрээ, жолооны системийн чухал засварыг туршлагатай механикаар шалгуулаарай. Буруу угсралт нь осол гэмтэлд хүргэж болзошгүй.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- VELTRIX BIKE REPAIR CENTER -->
+  <section id="repair" class="vx-repair">
+    <div class="vx-repair-inner">
+      <div class="vx-repair-heading">
+        <div>
+          <div class="vx-kicker"><span></span> VELTRIX REPAIR CENTER</div>
+          <h2>BIKE <em>REPAIR</em></h2>
+          <p>Унадаг дугуйн нийтлэг эвдрэл, шалгах арга болон засварын заавар.</p>
+        </div>
+        <div class="vx-repair-count">
+          <strong id="vxRepairCount">0</strong>
+          <span>ЗАСВАРЫН ЗААВАР</span>
+        </div>
+      </div>
+
+      <div class="vx-repair-search">
+        <span>⌕</span>
+        <input id="vxRepairSearch" type="search"
+          placeholder="Эвдрэл эсвэл эд ангийн нэрээр хайх...">
+      </div>
+
+      <div id="vxRepairCategories" class="vx-repair-categories"></div>
+
+      <div id="vxRepairGrid" class="vx-repair-grid">
+        <p>Засварын заавар ачаалж байна...</p>
+      </div>
+
+      <div class="vx-repair-safety">
+        <strong>⚠ АЮУЛГҮЙ АЖИЛЛАГАА</strong>
+        <p>Тоормос, гидравлик систем, амортизатор болон рамны бүтцийн гэмтлийг мэргэжлийн механикаар шалгуулаарай. Засварын дараа дугуйг замд унахаас өмнө аюулгүй орчинд шалгах шаардлагатай.</p>
+      </div>
+    </div>
+  </section>
 
   <section class="vx-banner">
     <div class="vx-banner-bg"></div>
@@ -332,6 +410,20 @@
     <div class="auth-modal-content">
       <button id="authClose" class="modal-close" type="button">✕</button>
       <div id="authContent"></div>
+    </div>
+  </div>
+
+  <!-- VELTRIX FIRST VISIT PUSH PROMPT -->
+  <div id="vxPushPrompt" class="vx-push-prompt">
+    <div class="vx-push-prompt-card" role="dialog" aria-modal="true" aria-labelledby="vxPushPromptTitle">
+      <button id="vxPushPromptClose" class="vx-push-prompt-close" type="button" aria-label="Хаах">×</button>
+      <div class="vx-push-prompt-mark">V</div>
+      <span class="vx-push-prompt-tag">VELTRIX NOTIFICATIONS</span>
+      <h2 id="vxPushPromptTitle">МЭДЭГДЛЭЭС ХОЦРОХГҮЙ</h2>
+      <p>Захиалгын төлөв болон чухал мэдээллийн шинэчлэлтийг шууд хүлээн аваарай.</p>
+      <button id="vxPushPromptAllow" class="vx-push-allow" type="button">МЭДЭГДЭЛ ЗӨВШӨӨРӨХ</button>
+      <button id="vxPushPromptDecline" class="vx-push-decline" type="button">ОДООХОНДОО ҮГҮЙ</button>
+      <div id="vxPushPromptMessage" class="vx-push-prompt-message" role="status" aria-live="polite"></div>
     </div>
   </div>
 
